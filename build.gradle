@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+}
+
+group 'org.gaguilar'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation 'org.seleniumhq.selenium:selenium-java:4.3.0'
+
+    implementation 'io.cucumber:cucumber-java:7.4.1'
+    testImplementation 'io.cucumber:cucumber-junit:7.4.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+// gradle cucumber -Psuite=@SUITE
+// gradle cucumber -Psuite=@Regression
+task cucumber() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'html:build/reports/cucumber/reporte.html', '--glue', 'runner',
+                    'src/test/resources', '--tags']+[suite]
+        }
+    }
+}
