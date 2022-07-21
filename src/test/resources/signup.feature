@@ -8,5 +8,4 @@ Feature: Signup
       | fullName | Gonzalo Aguilar             |
       | email    | g_user{number}@gaguilar.com |
       | password | g4guil4r                    |
-      | counter  | 0                           |
     Then deberia ingresar a la app web
